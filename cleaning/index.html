@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cleaning Business Pricing Calculator — what to charge per job (2026)</title>
+<meta name="description" content="Free pricing calculator for cleaning businesses. Enter labour cost, hours, crew size, supplies, travel time and monthly overhead to get the price per job that actually hits your target margin.">
+<meta property="og:title" content="Cleaning Business Pricing Calculator — what to charge per job">
+<meta property="og:description" content="Work out the real cost of a cleaning job and the price you need to charge to hit your margin.">
+<meta property="og:type" content="website">
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b35;--txt:#e8ecf1;--dim:#9aa4b2;--acc:#2fa8a0;--ok:#43b581}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:30px;line-height:1.25;margin:0 0 8px}
+h2{font-size:20px;margin:34px 0 10px}
+h3{font-size:17px;margin:18px 0 6px}
+p.lede{color:var(--dim);margin:0 0 24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px}
+input,select{width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:#0f1319;color:var(--txt);font-size:16px}
+input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+td{padding:8px 0;border-bottom:1px solid var(--line)}
+td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-bottom:none;font-weight:700;font-size:18px;padding-top:14px}
+.neg{color:#ff7b72}.pos{color:var(--ok)}
+.note{font-size:13px;color:var(--dim);margin-top:14px}
+.cta{margin-top:26px;background:linear-gradient(135deg,#1d2430 0%,#1a1f28 100%);border:1px solid var(--line);border-radius:14px;padding:20px}
+.cta h3{margin:0 0 8px;font-size:18px}
+.cta a{display:inline-block;margin-top:10px;background:var(--acc);color:#fff;text-decoration:none;font-weight:600;padding:11px 18px;border-radius:9px}
+ul{padding-left:20px}
+li{margin:6px 0}
+footer{margin-top:40px;color:var(--dim);font-size:13px}
+footer a{color:#9aa4b2}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Cleaning Business Pricing Calculator</h1>
+  <p class="lede">Most cleaning quotes are built by copying what a competitor charges. This works the other way: start from what a job actually costs you, then add the margin you need.</p>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <label for="wage">Hourly labour cost per cleaner (wage + payroll tax)</label>
+        <input id="wage" type="number" min="0" step="0.5" value="18">
+      </div>
+      <div>
+        <label for="hours">Hours on site per job</label>
+        <input id="hours" type="number" min="0" step="0.25" value="3">
+      </div>
+      <div>
+        <label for="crew">Cleaners on the job</label>
+        <input id="crew" type="number" min="1" step="1" value="1">
+      </div>
+      <div>
+        <label for="travel">Unpaid travel time per job (hours, per cleaner)</label>
+        <input id="travel" type="number" min="0" step="0.25" value="0.5">
+      </div>
+      <div>
+        <label for="supplies">Supplies + consumables per job</label>
+        <input id="supplies" type="number" min="0" step="0.5" value="4">
+      </div>
+      <div>
+        <label for="fixed">Monthly fixed costs (vehicle, insurance, software, ads)</label>
+        <input id="fixed" type="number" min="0" step="10" value="1200">
+      </div>
+      <div>
+        <label for="jobs">Jobs per month</label>
+        <input id="jobs" type="number" min="1" step="1" value="60">
+      </div>
+      <div>
+        <label for="margin">Target gross margin (%)</label>
+        <input id="margin" type="number" min="0" max="90" step="1" value="45">
+      </div>
+    </div>
+
+    <table>
+      <tbody>
+        <tr><td>Labour on site</td><td id="c-labor">—</td></tr>
+        <tr><td>Paid travel time</td><td id="c-travel">—</td></tr>
+        <tr><td>Supplies</td><td id="c-supp">—</td></tr>
+        <tr><td>Fixed costs allocated to this job</td><td id="c-fixed">—</td></tr>
+        <tr><td>True cost of the job</td><td id="c-total">—</td></tr>
+        <tr class="total"><td>Price to hit your target margin</td><td id="c-price">—</td></tr>
+        <tr><td>Break-even price (zero profit)</td><td id="c-be">—</td></tr>
+        <tr><td>Effective rate per on-site hour</td><td id="c-rate">—</td></tr>
+        <tr><td>Monthly revenue if you fill all jobs</td><td id="c-month">—</td></tr>
+        <tr><td>Monthly profit at that price</td><td id="c-profit">—</td></tr>
+      </tbody>
+    </table>
+    <p class="note" id="hint"></p>
+  </div>
+
+  <h2>Why the hourly rate you quote is not your wage</h2>
+  <p>If one cleaner costs $18 an hour and the job takes three hours, the job costs $54 before supplies, before the van, before insurance and before the owner earns anything. Add 0.5 hours of unpaid travel per cleaner and the real cost of that "three hour" job is already $63. Quoting $25 an hour because a competitor did is how cleaning businesses end up busy and broke.</p>
+  <p>The number that matters is the <strong>effective rate per on-site hour</strong> in the table: the price divided by the hours the customer can see. If that number is close to your wage rate, the business is not making money — it is buying itself a job.</p>
+
+  <h2>What this calculator does not include</h2>
+  <ul>
+    <li>Owner's own salary when the owner also cleans — treat it as a labour cost or the margin is fictional.</li>
+    <li>Income tax, sales tax or VAT you have to collect and remit.</li>
+    <li>Equipment replacement cycles (vacuums, extractors) beyond the monthly fixed cost you enter.</li>
+    <li>Cancellations and drive-bys, which is why the jobs-per-month figure should be realistic rather than best case.</li>
+  </ul>
+
+  <div class="cta">
+    <h3>Want to see a month of jobs, not one quote?</h3>
+    <p>A single job tells you one price. The workbook tracks each job's quote, hours, supplies, travel and actual margin, so you can see which customer types and which services actually pay — and where a "profitable" month is hiding a loss.</p>
+    <a href="https://2477537799006.gumroad.com/l/cleaning-business-pricing-calculator">Cleaning pricing &amp; profit workbook</a>
+  </div>
+
+  <h2>Frequently asked</h2>
+  <h3>Should travel time be charged to the customer?</h3>
+  <p>It has to be paid for by somebody. Either it sits inside the price as a cost (what this calculator does) or you add a travel fee, but leaving it out entirely means every job quietly loses money.</p>
+  <h3>What margin is normal for cleaning?</h3>
+  <p>There is no universal number, and anyone quoting one without knowing the market is guessing. Enter the margin you need to cover owner pay and reinvestment, then check whether the resulting price is one your local market actually accepts. If it is not, the answer is scope or frequency, not a thinner margin.</p>
+  <h3>Why does my allocated fixed cost look high?</h3>
+  <p>Because it is spread over the jobs you enter. Fewer jobs per month means each one has to carry more of the van, insurance and software. That is exactly the trap small operators fall into when they price for a full calendar they do not have.</p>
+
+  <footer>
+    <p>Free tool, no signup. Other free calculators: <a href="/etsy-fee-calculator/">Etsy fees</a> · <a href="/etsy-fee-calculator/freelance/">freelance rates</a>. <a href="https://2477537799006.gumroad.com">More spreadsheet tools</a></p>
+  </footer>
+</div>
+
+<script>
+const money=v=>'$'+(Math.round(v*100)/100).toFixed(2);
+function val(id){return +document.getElementById(id).value||0;}
+function calc(){
+  const wage=val('wage'), hours=val('hours'), crew=Math.max(1,Math.floor(val('crew')));
+  const travel=val('travel'), supplies=val('supplies'), fixed=val('fixed');
+  const jobs=Math.max(1,Math.floor(val('jobs'))), margin=Math.min(90,Math.max(0,val('margin')));
+
+  const labor=wage*hours*crew;
+  const travelCost=wage*travel*crew;
+  const fixedPerJob=fixed/jobs;
+  const cost=labor+travelCost+supplies+fixedPerJob;
+  const price=margin<100?cost/(1-margin/100):cost;
+  const onSiteHours=hours*crew;
+  const rate=onSiteHours>0?price/onSiteHours:0;
+  const monthlyRevenue=price*jobs;
+  const monthlyProfit=monthlyRevenue-(cost*jobs);
+
+  const set=(id,v)=>{const e=document.getElementById(id);e.textContent=v;};
+  set('c-labor',money(labor));
+  set('c-travel',money(travelCost));
+  set('c-supp',money(supplies));
+  set('c-fixed',money(fixedPerJob));
+  set('c-total',money(cost));
+  set('c-price',money(price));
+  set('c-be',money(cost));
+  set('c-rate',money(rate));
+  set('c-month',money(monthlyRevenue));
+  const p=document.getElementById('c-profit');
+  p.textContent=money(monthlyProfit); p.className=monthlyProfit<0?'neg':'pos';
+
+  const wageRatio=rate>0?wage/rate*100:0;
+  document.getElementById('hint').textContent=
+    'Your labour cost is '+(wageRatio?wageRatio.toFixed(0):'0')+'% of the price per on-site hour ('+money(wage)+' of '+money(rate)+'). '+
+    'If that share is above roughly two thirds, there is almost nothing left for overhead, rework and owner profit.';
+}
+['wage','hours','crew','travel','supplies','fixed','jobs','margin'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('input',calc); el.addEventListener('change',calc);
+});
+calc();
+</script>
+</body>
+</html>
