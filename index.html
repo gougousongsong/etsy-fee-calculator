@@ -126,6 +126,30 @@ footer{margin-top:40px;color:var(--dim);font-size:13px}
   </footer>
 </div>
 
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"WebApplication",
+      "name":"Etsy Fee Calculator 2026",
+      "applicationCategory":"BusinessApplication",
+      "operatingSystem":"Any browser",
+      "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+      "description":"Calculate Etsy transaction fee, payment processing, listing fees and Offsite Ads for one order, and see net profit."
+    },
+    {
+      "@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"Does Etsy charge the transaction fee on shipping?","acceptedAnswer":{"@type":"Answer","text":"Yes. The 6.5% transaction fee applies to the order total, including shipping and gift wrap charged to the buyer."}},
+        {"@type":"Question","name":"Why do Etsy fees look higher than 9.5%?","acceptedAnswer":{"@type":"Answer","text":"6.5% transaction plus 3% processing is 9.5% before the flat $0.25 processing fee, the $0.20 listing fee and any Offsite Ads order fee. Cheap items take a larger percentage hit because the flat fees do not shrink with price."}},
+        {"@type":"Question","name":"Is the Etsy Offsite Ads fee charged on every order?","acceptedAnswer":{"@type":"Answer","text":"No. It applies only to orders Etsy attributes to an offsite ad click within 30 days, at 15% (12% above $10,000 annual sales) and capped at $100 per order."}}
+      ]
+    }
+  ]
+}
+</script>
+
 <script>
 const P={
   us:{pct:0.03,flat:0.25,sym:'$'},
