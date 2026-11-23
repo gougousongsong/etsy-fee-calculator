@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Etsy Fee Calculator 2026 — what you actually keep per sale (US, UK, EU)</title>
+<meta name="description" content="Free Etsy fee calculator for 2026. Enter a price and see the 6.5% transaction fee, 3% + $0.25 US processing, $0.20 listing and optional Offsite Ads 15% taken out, plus your real net profit.">
+<meta property="og:title" content="Etsy Fee Calculator 2026 — what you actually keep per sale">
+<meta property="og:description" content="Work out Etsy fees and real profit per order: transaction, payment processing, listing and Offsite Ads.">
+<meta property="og:type" content="website">
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b35;--txt:#e8ecf1;--dim:#9aa4b2;--acc:#f56400;--ok:#43b581}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:30px;line-height:1.25;margin:0 0 8px}
+h2{font-size:20px;margin:34px 0 10px}
+p.lede{color:var(--dim);margin:0 0 24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px}
+input,select{width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:#0f1319;color:var(--txt);font-size:16px}
+input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+td{padding:8px 0;border-bottom:1px solid var(--line)}
+td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-bottom:none;font-weight:700;font-size:18px;padding-top:14px}
+.neg{color:#ff7b72}.pos{color:var(--ok)}
+.note{font-size:13px;color:var(--dim);margin-top:14px}
+.cta{margin-top:26px;background:linear-gradient(135deg,#1d2430 0%,#1a1f28 100%);border:1px solid var(--line);border-radius:14px;padding:20px}
+.cta h3{margin:0 0 8px;font-size:18px}
+.cta a{display:inline-block;margin-top:10px;background:var(--acc);color:#fff;text-decoration:none;font-weight:600;padding:11px 18px;border-radius:9px}
+ul{padding-left:20px}
+li{margin:6px 0}
+code{background:#0f1319;padding:2px 6px;border-radius:5px;font-size:14px}
+footer{margin-top:40px;color:var(--dim);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Etsy Fee Calculator 2026</h1>
+  <p class="lede">Enter one order and see every fee Etsy takes, plus the profit you actually keep. Rates as published by Etsy in November 2026.</p>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <label for="price">Item price (what the buyer pays)</label>
+        <input id="price" type="number" min="0" step="0.01" value="35">
+      </div>
+      <div>
+        <label for="ship">Shipping charged to buyer</label>
+        <input id="ship" type="number" min="0" step="0.01" value="5">
+      </div>
+      <div>
+        <label for="cost">Your cost of goods + packaging</label>
+        <input id="cost" type="number" min="0" step="0.01" value="10">
+      </div>
+      <div>
+        <label for="country">Bank account country (processing fee)</label>
+        <select id="country">
+          <option value="us" selected>United States — 3% + $0.25</option>
+          <option value="uk">United Kingdom — 4% + £0.20</option>
+          <option value="eu">EU / Ireland — 4% + €0.30</option>
+          <option value="ca">Canada (domestic/US) — 3% + C$0.25</option>
+          <option value="au">Australia (domestic) — 3% + A$0.25</option>
+          <option value="row">Rest of world (6.5% + $0.30)</option>
+        </select>
+      </div>
+      <div>
+        <label for="offsite">Offsite Ads on this order?</label>
+        <select id="offsite">
+          <option value="no" selected>No</option>
+          <option value="15">Yes — 15% (shop under $10k/yr)</option>
+          <option value="12">Yes — 12% (shop over $10k/yr)</option>
+        </select>
+      </div>
+      <div>
+        <label for="qty">Quantity in this order</label>
+        <input id="qty" type="number" min="1" step="1" value="1">
+      </div>
+    </div>
+
+    <table>
+      <tbody>
+        <tr><td>Transaction fee (6.5%)</td><td id="f-trans">—</td></tr>
+        <tr><td>Payment processing</td><td id="f-proc">—</td></tr>
+        <tr><td>Listing + extra quantity ($0.20 each)</td><td id="f-list">—</td></tr>
+        <tr><td>Offsite Ads</td><td id="f-ads">—</td></tr>
+        <tr><td>Total fees</td><td id="f-total">—</td></tr>
+        <tr><td>Revenue (item + shipping)</td><td id="f-rev">—</td></tr>
+        <tr class="total"><td>Net profit after fees and your cost</td><td id="f-net">—</td></tr>
+        <tr><td>Profit margin</td><td id="f-margin">—</td></tr>
+      </tbody>
+    </table>
+    <p class="note" id="breakeven"></p>
+  </div>
+
+  <h2>The rates used here</h2>
+  <ul>
+    <li><strong>Listing fee:</strong> $0.20 per listing, charged on publishing and again on renewal (a listing lasts 4 months). Extra $0.20 per additional quantity sold in one order.</li>
+    <li><strong>Transaction fee:</strong> 6.5% of the order total, including shipping and gift wrap.</li>
+    <li><strong>Payment processing:</strong> 3% + $0.25 for US bank accounts; 4% + €0.30 for most of the EU; 4% + £0.20 for the UK. It varies by country.</li>
+    <li><strong>Offsite Ads:</strong> 15% of an attributed order if the shop has made under $10,000 in any 365 days, 12% above that, capped at $100 per order.</li>
+    <li><strong>Not included:</strong> VAT or regulatory operating fees (UK, France, Italy, India, Spain, Türkiye, Vietnam, Canada), currency conversion at 2.5%, Etsy Ads, and shipping label costs.</li>
+  </ul>
+  <p class="note">Figures taken from Etsy's published fees and payments policies, checked 23 November 2026. Always confirm against your own payment account, because Etsy can change rates and country rules.</p>
+
+  <div class="cta">
+    <h3>Want this across a whole month of orders?</h3>
+    <p>A per-order calculator answers one sale. To see whether the shop is actually making money you need orders, refunds, fees and profit in one place — that is what the tracker does: month-by-month revenue, Etsy fees, refunds, ad spend, cost of goods and net margin per order.</p>
+    <a href="https://2477537799006.gumroad.com/l/etsy-fee-profit-calculator-us">Etsy fee &amp; profit workbook</a>
+    <a href="https://2477537799006.gumroad.com/l/etsy-sales-order-tracker-pl-dashboard" style="background:#2a3140;margin-left:8px">Sales tracker + monthly P&amp;L</a>
+  </div>
+
+  <h2>Frequently asked</h2>
+  <h3 style="font-size:17px;margin:18px 0 6px">Does Etsy charge the transaction fee on shipping?</h3>
+  <p>Yes. The 6.5% transaction fee applies to the order total, including shipping and gift wrap you charge the buyer.</p>
+  <h3 style="font-size:17px;margin:18px 0 6px">Why do my fees look higher than 9.5%?</h3>
+  <p>6.5% transaction plus 3% processing is 9.5% before the flat $0.25, the $0.20 listing and any Offsite Ads order fee. Cheap items take a bigger percentage hit because the flat fees do not shrink with price.</p>
+  <h3 style="font-size:17px;margin:18px 0 6px">Is the Offsite Ads fee charged on every order?</h3>
+  <p>No. It only applies to orders Etsy attributes to an offsite ad click within 30 days, and it is capped at $100 per order.</p>
+
+  <footer>
+    <p>Free tool, no signup. Built for sellers who would rather check the arithmetic than guess. <a href="https://2477537799006.gumroad.com" style="color:#9aa4b2">More spreadsheet tools</a></p>
+  </footer>
+</div>
+
+<script>
+const P={
+  us:{pct:0.03,flat:0.25,sym:'$'},
+  uk:{pct:0.04,flat:0.20,sym:'£'},
+  eu:{pct:0.04,flat:0.30,sym:'€'},
+  ca:{pct:0.03,flat:0.25,sym:'C$'},
+  au:{pct:0.03,flat:0.25,sym:'A$'},
+  row:{pct:0.065,flat:0.30,sym:'$'}
+};
+const money=(v,sym)=>sym+ (Math.round(v*100)/100).toFixed(2);
+function calc(){
+  const price=+document.getElementById('price').value||0;
+  const ship=+document.getElementById('ship').value||0;
+  const cost=+document.getElementById('cost').value||0;
+  const qty=Math.max(1,Math.floor(+document.getElementById('qty').value||1));
+  const ck=document.getElementById('country').value;
+  const adsSel=document.getElementById('offsite').value;
+  const cfg=P[ck], sym=cfg.sym;
+
+  const revenue=price*qty+ship;
+  const trans=revenue*0.065;
+  const proc=revenue*cfg.pct+cfg.flat;
+  const listing=0.20*qty;
+  const ads=adsSel==='no'?0:Math.min(revenue*(+adsSel/100),100);
+  const fees=trans+proc+listing+ads;
+  const net=revenue-fees-cost*qty;
+  const margin=revenue>0?net/revenue*100:0;
+
+  const set=(id,v)=>{const e=document.getElementById(id);e.textContent=v;};
+  set('f-trans','-'+money(trans,sym));
+  set('f-proc','-'+money(proc,sym));
+  set('f-list','-'+money(listing,sym));
+  set('f-ads',ads?('-'+money(ads,sym)):'0.00');
+  set('f-total','-'+money(fees,sym));
+  set('f-rev',money(revenue,sym));
+  const netEl=document.getElementById('f-net');
+  netEl.textContent=money(net,sym);
+  netEl.className=net<0?'neg':'pos';
+  set('f-margin',margin.toFixed(1)+'%');
+
+  // break-even price for this cost, ignoring ads
+  let be=0;
+  for(let p=0;p<10000;p+=0.01){
+    const r=p+ship;
+    const f=r*0.065+r*cfg.pct+cfg.flat+0.20;
+    if(r-f-cost>=0){be=p;break;}
+  }
+  document.getElementById('breakeven').textContent=
+    'Break-even item price at this cost and shipping (no Offsite Ads): '+sym+(Math.round(be*100)/100).toFixed(2)+
+    '. Anything below that loses money.';
+}
+['price','ship','cost','country','offsite','qty'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('input',calc); el.addEventListener('change',calc);
+});
+calc();
+</script>
+</body>
+</html>
