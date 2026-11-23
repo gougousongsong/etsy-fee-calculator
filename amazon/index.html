@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amazon FBA Profit Calculator 2026 — true cost per unit and break-even price</title>
+<meta name="description" content="Free Amazon FBA calculator for 2026: referral fee, fulfillment fee with the 3.5% fuel surcharge, storage, inbound freight, prep, ads and returns, to give real profit per unit and the break-even price.">
+<meta property="og:title" content="Amazon FBA Profit Calculator 2026 — true cost per unit">
+<meta property="og:description" content="Every per-unit cost, including ads and returns, to show whether a product actually makes money.">
+<meta property="og:type" content="website">
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b35;--txt:#e8ecf1;--dim:#9aa4b2;--acc:#e0a33e;--ok:#43b581}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:30px;line-height:1.25;margin:0 0 8px}
+h2{font-size:20px;margin:34px 0 10px}
+h3{font-size:17px;margin:18px 0 6px}
+p.lede{color:var(--dim);margin:0 0 24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:700px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px}
+input,select{width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:#0f1319;color:var(--txt);font-size:16px}
+input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+td{padding:8px 0;border-bottom:1px solid var(--line)}
+td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-bottom:none;font-weight:700;font-size:18px;padding-top:14px}
+tr.sub td{color:var(--dim);font-size:14px}
+.neg{color:#ff7b72}.pos{color:var(--ok)}
+.note{font-size:13px;color:var(--dim);margin-top:14px}
+.cta{margin-top:26px;background:linear-gradient(135deg,#1d2430 0%,#1a1f28 100%);border:1px solid var(--line);border-radius:14px;padding:20px}
+.cta h3{margin:0 0 8px;font-size:18px}
+.cta a{display:inline-block;margin-top:10px;background:var(--acc);color:#0f1115;text-decoration:none;font-weight:700;padding:11px 18px;border-radius:9px}
+ul{padding-left:20px}
+li{margin:6px 0}
+table.ref{margin-top:12px;font-size:14px}
+table.ref th{text-align:left;color:var(--dim);font-weight:500;border-bottom:1px solid var(--line);padding:6px 0}
+table.ref td{border-bottom:1px solid #1c2129;padding:6px 0}
+footer{margin-top:40px;color:var(--dim);font-size:13px}
+footer a{color:#9aa4b2}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Amazon FBA Profit Calculator 2026</h1>
+  <p class="lede">The fee that Amazon quotes per unit is not the cost of the unit. Freight, prep, storage, ads and returns all land on the same sale, and most "profitable" products die on exactly one of them.</p>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <label for="price">Sale price</label>
+        <input id="price" type="number" min="0" step="0.01" value="39.99">
+      </div>
+      <div>
+        <label for="refpct">Referral fee % (15% most categories)</label>
+        <input id="refpct" type="number" min="0" max="45" step="1" value="15">
+      </div>
+      <div>
+        <label for="refflat">Referral minimum per item</label>
+        <input id="refflat" type="number" min="0" step="0.01" value="0.30">
+      </div>
+      <div>
+        <label for="ful">FBA fulfillment fee (from Seller Central)</label>
+        <input id="ful" type="number" min="0" step="0.01" value="4.60">
+      </div>
+      <div>
+        <label for="surcharge">Fuel &amp; logistics surcharge</label>
+        <select id="surcharge">
+          <option value="3.5" selected>Yes — 3.5% of fulfillment fee</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+      <div>
+        <label for="cogs">Product cost per unit</label>
+        <input id="cogs" type="number" min="0" step="0.01" value="9.50">
+      </div>
+      <div>
+        <label for="inbound">Inbound freight + duties per unit</label>
+        <input id="inbound" type="number" min="0" step="0.01" value="1.20">
+      </div>
+      <div>
+        <label for="prep">Prep, polybag, labels per unit</label>
+        <input id="prep" type="number" min="0" step="0.01" value="0.50">
+      </div>
+      <div>
+        <label for="storage">Storage per unit per month</label>
+        <input id="storage" type="number" min="0" step="0.01" value="0.14">
+      </div>
+      <div>
+        <label for="months">Months of storage per unit before it sells</label>
+        <input id="months" type="number" min="0" step="0.5" value="2">
+      </div>
+      <div>
+        <label for="ppc">Ad spend per unit sold</label>
+        <input id="ppc" type="number" min="0" step="0.01" value="2.50">
+      </div>
+      <div>
+        <label for="retpct">Return rate %</label>
+        <input id="retpct" type="number" min="0" max="100" step="1" value="8">
+      </div>
+      <div>
+        <label for="retcost">Loss per return (unsellable + fees)</label>
+        <input id="retcost" type="number" min="0" step="0.01" value="12.00">
+      </div>
+      <div>
+        <label for="units">Units sold per month</label>
+        <input id="units" type="number" min="1" step="1" value="120">
+      </div>
+    </div>
+
+    <table>
+      <tbody>
+        <tr><td>Referral fee</td><td id="o-ref">—</td></tr>
+        <tr><td>Fulfillment fee + surcharge</td><td id="o-ful">—</td></tr>
+        <tr><td>Storage</td><td id="o-sto">—</td></tr>
+        <tr><td>Returns provision</td><td id="o-ret">—</td></tr>
+        <tr class="sub"><td>Amazon + platform fees</td><td id="o-amz">—</td></tr>
+        <tr><td>Product cost</td><td id="o-cogs">—</td></tr>
+        <tr><td>Inbound freight + prep</td><td id="o-inb">—</td></tr>
+        <tr><td>Ad spend</td><td id="o-ad">—</td></tr>
+        <tr><td>Total cost per unit</td><td id="o-cost">—</td></tr>
+        <tr class="total"><td>Net profit per unit</td><td id="o-net">—</td></tr>
+        <tr><td>Net margin</td><td id="o-margin">—</td></tr>
+        <tr><td>Return on cash tied up in the unit</td><td id="o-roi">—</td></tr>
+        <tr><td>Break-even sale price</td><td id="o-be">—</td></tr>
+        <tr><td>Monthly profit at your volume</td><td id="o-month">—</td></tr>
+      </tbody>
+    </table>
+    <p class="note" id="hint"></p>
+  </div>
+
+  <h2>2026 reference points</h2>
+  <p>Use these as sanity checks, then read the exact fee for your own SKU in Seller Central — the fulfillment fee depends on size tier, shipping weight <em>and</em> price band.</p>
+  <table class="ref">
+    <thead><tr><th>Fee</th><th>2026 US rate</th></tr></thead>
+    <tbody>
+      <tr><td>Referral fee</td><td>15% of the sale price in most categories, $0.30 minimum; apparel 5% / 10% / 17% by price band</td></tr>
+      <tr><td>Fulfillment, small standard 2 oz</td><td>$3.32 in the $10&ndash;$50 price band</td></tr>
+      <tr><td>Fulfillment, large standard 12&ndash;16 oz</td><td>$4.60 in the $10&ndash;$50 band</td></tr>
+      <tr><td>Fulfillment, large standard ~3 lb</td><td>$6.67 in the $10&ndash;$50 band</td></tr>
+      <tr><td>Fuel &amp; logistics surcharge</td><td>3.5% of the fulfillment fee, in force since 17 April 2026</td></tr>
+      <tr><td>Monthly storage, standard size</td><td>$0.78 per cubic foot January&ndash;September, $2.40 October&ndash;December</td></tr>
+      <tr><td>Holiday peak fulfilment</td><td>Roughly $0.32 per unit on average, 15 October 2026 &ndash; 14 January 2027</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Rates checked on 23 November 2026 against Amazon's published US fee schedule as reported by several 2026 fee trackers. Amazon changes these; Seller Central is the authority, and this page does not claim otherwise.</p>
+
+  <h2>The four costs that quietly kill a product</h2>
+  <ul>
+    <li><strong>Ad spend per unit.</strong> A product that only sells on ads has to carry the ad cost in every unit, not only in the launch month.</li>
+    <li><strong>Returns.</strong> An 8% return rate with a $12 loss per return costs about $0.96 on every unit shipped, not only on the returned ones.</li>
+    <li><strong>Storage time.</strong> Storage is charged per cubic foot per month. Slow stock costs more the longer it sits, which is why "months of storage" is an input rather than a constant.</li>
+    <li><strong>Inbound freight and prep.</strong> Both are real cash per unit and both are invisible in a referral-fee calculation.</li>
+  </ul>
+
+  <div class="cta">
+    <h3>Tracking batches, not just one price?</h3>
+    <p>A single unit calculation answers "should I buy this SKU". The workbook keeps every purchase batch, its landed cost, the actual Amazon fees charged, inventory age and realised profit, so you can see which batch made money and which one is still sitting in a warehouse eating storage fees.</p>
+    <a href="https://2477537799006.gumroad.com/l/amazon-reseller-profit-inventory-workbook">Amazon profit &amp; inventory workbook</a>
+  </div>
+
+  <h2>Frequently asked</h2>
+  <h3>Is the referral fee charged on the sale price or the profit?</h3>
+  <p>On the total the buyer pays — item price plus any delivery or gift wrap, excluding tax. Selling at a higher price also raises the referral fee, which is why "just charge more" is not free.</p>
+  <h3>Why does my storage cost look tiny but my profit still disappears?</h3>
+  <p>Storage is rarely the killer on its own. Ads, returns and inbound freight usually are. Change the ad spend to zero and see how much of the profit was actually the ad budget.</p>
+  <h3>Does this include the $39.99 professional selling plan?</h3>
+  <p>No — that is an account-level cost, not a per-unit one. Divide it by your monthly volume and add it to product cost if you want it in the picture.</p>
+
+  <footer>
+    <p>Free tool, no signup. Other free calculators: <a href="/etsy-fee-calculator/">Etsy fees</a> &middot; <a href="/etsy-fee-calculator/cleaning/">cleaning business pricing</a> &middot; <a href="/etsy-fee-calculator/freelance/">freelance rates</a>. <a href="https://2477537799006.gumroad.com">More spreadsheet tools</a></p>
+  </footer>
+</div>
+
+<script>
+const money=v=>'$'+(Math.round(v*100)/100).toFixed(2);
+const val=id=>+document.getElementById(id).value||0;
+function calc(){
+  const price=val('price'), refpct=val('refpct')/100, refflat=val('refflat');
+  const ful=val('ful'), sur=val('surcharge')/100;
+  const cogs=val('cogs'), inbound=val('inbound'), prep=val('prep');
+  const storage=val('storage'), months=val('months');
+  const ppc=val('ppc'), retpct=val('retpct')/100, retcost=val('retcost');
+  const units=Math.max(1,Math.floor(val('units')));
+
+  const refFee=Math.max(price*refpct, refflat);
+  const fulFee=ful*(1+sur);
+  const stoCost=storage*months;
+  const retCost=retpct*retcost;
+  const amz=refFee+fulFee+stoCost+retCost;
+  const cost=amz+cogs+inbound+prep+ppc;
+  const net=price-cost;
+  const margin=price>0?net/price*100:0;
+  const cash=cogs+inbound+prep;
+  const roi=cash>0?net/cash*100:0;
+  // break-even price: p*(1-refpct) - (fulFee+sto+ret+cogs+inbound+prep+ppc) = 0, respecting the minimum
+  const fixed=fulFee+stoCost+retCost+cogs+inbound+prep+ppc;
+  let be=fixed/(1-refpct);
+  if(be*refpct<refflat) be=(fixed+refflat)/(1-refpct);
+
+  const set=(id,v)=>{document.getElementById(id).textContent=v;};
+  set('o-ref',money(refFee));
+  set('o-ful',money(fulFee));
+  set('o-sto',money(stoCost));
+  set('o-ret',money(retCost));
+  set('o-amz',money(amz));
+  set('o-cogs',money(cogs));
+  set('o-inb',money(inbound+prep));
+  set('o-ad',money(ppc));
+  set('o-cost',money(cost));
+  const n=document.getElementById('o-net'); n.textContent=money(net); n.className=net<0?'neg':'pos';
+  set('o-margin',margin.toFixed(1)+'%');
+  set('o-roi',roi.toFixed(0)+'%');
+  set('o-be',money(be));
+  const m=document.getElementById('o-month'); m.textContent=money(net*units); m.className=net<0?'neg':'pos';
+
+  const adShare=price>0?ppc/price*100:0;
+  document.getElementById('hint').textContent =
+    'Ad spend is '+adShare.toFixed(0)+'% of the sale price and returns add '+money(retCost)+
+    ' to every unit. Amazon fees alone take '+money(amz)+' ('+(price>0?(amz/price*100).toFixed(0):'0')+'%). '+
+    'If net profit is below about 15% of price, one fee increase or a slow month turns it negative.';
+}
+['price','refpct','refflat','ful','surcharge','cogs','inbound','prep','storage','months','ppc','retpct','retcost','units'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('input',calc); el.addEventListener('change',calc);
+});
+calc();
+</script>
+</body>
+</html>
