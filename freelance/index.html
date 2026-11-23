@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Freelance Rate Calculator 2026 — the hourly rate you actually need</title>
+<meta name="description" content="Work out the freelance hourly rate you need from the take-home income you want, your billable hours, business expenses and tax. Includes a rain-day buffer and day rate.">
+<meta property="og:title" content="Freelance Rate Calculator — the hourly rate you actually need">
+<meta property="og:description" content="Turn a target income into a defensible hourly and day rate, using billable hours rather than 40 per week.">
+<meta property="og:type" content="website">
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b35;--txt:#e8ecf1;--dim:#9aa4b2;--acc:#7c6cf0;--ok:#43b581}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:30px;line-height:1.25;margin:0 0 8px}
+h2{font-size:20px;margin:34px 0 10px}
+h3{font-size:17px;margin:18px 0 6px}
+p.lede{color:var(--dim);margin:0 0 24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px}
+input,select{width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:#0f1319;color:var(--txt);font-size:16px}
+input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+td{padding:8px 0;border-bottom:1px solid var(--line)}
+td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-bottom:none;font-weight:700;font-size:18px;padding-top:14px}
+.pos{color:var(--ok)}
+.note{font-size:13px;color:var(--dim);margin-top:14px}
+.cta{margin-top:26px;background:linear-gradient(135deg,#1d2430 0%,#1a1f28 100%);border:1px solid var(--line);border-radius:14px;padding:20px}
+.cta h3{margin:0 0 8px;font-size:18px}
+.cta a{display:inline-block;margin-top:10px;background:var(--acc);color:#fff;text-decoration:none;font-weight:600;padding:11px 18px;border-radius:9px}
+ul{padding-left:20px}
+li{margin:6px 0}
+footer{margin-top:40px;color:var(--dim);font-size:13px}
+footer a{color:#9aa4b2}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Freelance Rate Calculator</h1>
+  <p class="lede">Your rate is not "your salary divided by 2,080". Only part of a freelancer's week is billable, and the expenses and tax come out of the same money. This works forwards from what you need to keep.</p>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <label for="income">Take-home income you want per year</label>
+        <input id="income" type="number" min="0" step="1000" value="60000">
+      </div>
+      <div>
+        <label for="tax">Income + self-employment tax rate (%)</label>
+        <input id="tax" type="number" min="0" max="60" step="1" value="30">
+      </div>
+      <div>
+        <label for="expenses">Business expenses per year (software, insurance, equipment)</label>
+        <input id="expenses" type="number" min="0" step="500" value="6000">
+      </div>
+      <div>
+        <label for="week">Billable hours per week</label>
+        <input id="week" type="number" min="1" step="1" value="25">
+      </div>
+      <div>
+        <label for="weeks">Weeks worked per year (after holiday, sick, gaps)</label>
+        <input id="weeks" type="number" min="1" max="52" step="1" value="46">
+      </div>
+      <div>
+        <label for="buffer">Rain-day buffer (%) for non-paying months</label>
+        <input id="buffer" type="number" min="0" max="60" step="1" value="15">
+      </div>
+    </div>
+
+    <table>
+      <tbody>
+        <tr><td>Pre-tax income required</td><td id="o-gross">—</td></tr>
+        <tr><td>Total revenue required</td><td id="o-rev">—</td></tr>
+        <tr><td>Billable hours per year</td><td id="o-hours">—</td></tr>
+        <tr><td>Revenue needed per billable hour</td><td id="o-base">—</td></tr>
+        <tr class="total"><td>Rate to charge (with buffer)</td><td id="o-rate">—</td></tr>
+        <tr><td>Day rate (8 billable hours)</td><td id="o-day">—</td></tr>
+        <tr><td>Effective hourly rate across a 40-hour week</td><td id="o-eff">—</td></tr>
+        <tr><td>Compare: same take-home as an employee</td><td id="o-cmp">—</td></tr>
+      </tbody>
+    </table>
+    <p class="note" id="hint"></p>
+  </div>
+
+  <h2>Why 25 billable hours is optimistic for many freelancers</h2>
+  <p>Admin, invoicing, sales calls, proposals, unpaid revisions and learning are all work, but none of it can be invoiced. A freelancer billing 25 hours a week is already running a 40-hour week, and the months with no work still have to be paid for by the months with work. That is what the buffer row is doing.</p>
+  <p>The "effective hourly rate" row is the honest comparison with a salaried job: it spreads the same money across 40 hours instead of the billable ones. If that number is below what an employer would pay for the same work, freelancing is currently costing you money.</p>
+
+  <h2>What this calculator does not include</h2>
+  <ul>
+    <li>Tax rules specific to your country — the rate you enter is an estimate you should check with an accountant.</li>
+    <li>Pension contributions, health insurance or parental leave beyond what you put in expenses.</li>
+    <li>Scope creep inside a fixed-price project. That is what the project quote part of the workbook is for.</li>
+    <li>Payment delays and bad debt, which the buffer partly covers but cannot remove.</li>
+  </ul>
+
+  <div class="cta">
+    <h3>Quoting a fixed-price project?</h3>
+    <p>An hourly rate does not tell you what to charge for "a website" or "a 10-page report". The quote calculator turns estimated hours, revision rounds, risk and your target margin into a single fixed price — and shows the floor below which the project is not worth taking.</p>
+    <a href="https://2477537799006.gumroad.com/l/freelance-rate-calculator">Freelance rate &amp; quote calculator</a>
+  </div>
+
+  <h2>Frequently asked</h2>
+  <h3>Should I charge more than my employee equivalent?</h3>
+  <p>Usually yes, because you are also covering the employer's side: tools, insurance, unpaid admin, unpaid holiday and gaps between contracts. The comparison row shows that gap directly.</p>
+  <h3>Is a day rate just eight hours?</h3>
+  <p>Only if you actually bill eight hours. Many freelancers price a day at six billable hours and leave room for calls and admin, which is why the day rate here is shown separately from the hourly rate.</p>
+  <h3>Why add a buffer on top of expenses?</h3>
+  <p>Because revenue is uneven. The buffer is what turns an average year into a survivable one when two clients pay late in the same month.</p>
+
+  <footer>
+    <p>Free tool, no signup. Other free calculators: <a href="/etsy-fee-calculator/">Etsy fees</a> · <a href="/etsy-fee-calculator/cleaning/">cleaning business pricing</a>. <a href="https://2477537799006.gumroad.com">More spreadsheet tools</a></p>
+  </footer>
+</div>
+
+<script>
+const money=v=>'$'+(Math.round(v*100)/100).toFixed(2);
+function val(id){return +document.getElementById(id).value||0;}
+function calc(){
+  const income=val('income'), taxPct=Math.min(60,Math.max(0,val('tax')));
+  const expenses=val('expenses'), week=Math.max(1,val('week'));
+  const weeks=Math.min(52,Math.max(1,val('weeks')));
+  const buffer=Math.min(60,Math.max(0,val('buffer')));
+
+  const gross = taxPct>=100 ? income : income/(1-taxPct/100);
+  const revenue = gross + expenses;
+  const hours = week*weeks;
+  const base = hours>0 ? revenue/hours : 0;
+  const rate = buffer<100 ? base/(1-buffer/100) : base;
+  const day = rate*8;
+  const eff = revenue/(40*weeks);
+
+  const set=(id,v)=>{document.getElementById(id).textContent=v;};
+  set('o-gross',money(gross));
+  set('o-rev',money(revenue));
+  set('o-hours',hours.toFixed(0)+' h');
+  set('o-base',money(base));
+  set('o-rate',money(rate));
+  set('o-day',money(day));
+  set('o-eff',money(eff)+' effective');
+
+  // comparison: an employee earning the same take-home typically needs ~1.25-1.4x in employer cost
+  const cmp = gross/(40*weeks);
+  set('o-cmp',money(cmp)+'/h salary equivalent');
+
+  document.getElementById('hint').textContent =
+    'You need '+money(revenue)+' of invoiced work in '+hours.toFixed(0)+' billable hours. '+
+    'At a 40-hour week spread over '+weeks.toFixed(0)+' weeks that is '+money(eff)+' per worked hour before you pay yourself anything extra.';
+}
+['income','tax','expenses','week','weeks','buffer'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('input',calc); el.addEventListener('change',calc);
+});
+calc();
+</script>
+</body>
+</html>
