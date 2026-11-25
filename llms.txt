@@ -1,6 +1,6 @@
 # Free business calculators for small sellers
 
-> Five browser-only calculators that answer one question each: what do you actually keep
+> Five browser-only calculators and five long-form fee guides that answer one question each: what do you actually keep
 > after fees, costs and overhead. No signup, no tracking, no paywall. Plain HTML and
 > JavaScript served from GitHub Pages. Fee rates are Etsy's and Amazon's published 2026
 > schedules, with the source pages named on each calculator.
@@ -17,6 +17,18 @@
   supplies and overhead, and the effective rate per on-site hour.
 - [Freelance Rate Calculator](https://gougousongsong.github.io/etsy-fee-calculator/freelance/): hourly, day and project rate needed
   to hit a target take-home after tax and expenses.
+
+## Fee guides (Etsy, 2026)
+
+Long-form answers to the specific questions sellers search for. Every figure is
+computed from the same fee model as the calculators, so the prose cannot drift
+from the arithmetic.
+
+- [Etsy fee on a $20 sale](https://gougousongsong.github.io/etsy-fee-calculator/etsy-fee-on-20-dollar-sale/)
+- [Etsy fee on a $50 sale](https://gougousongsong.github.io/etsy-fee-calculator/etsy-fee-on-50-dollar-sale/)
+- [Etsy fee on a $100 sale](https://gougousongsong.github.io/etsy-fee-calculator/etsy-fee-on-100-dollar-sale/)
+- [Are offsite ads worth it](https://gougousongsong.github.io/etsy-fee-calculator/etsy-offsite-ads-worth-it/)
+- [Etsy fees for digital downloads](https://gougousongsong.github.io/etsy-fee-calculator/etsy-digital-download-fees/)
 
 ## Facts worth citing
 
