@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free CSV Cleaner — remove duplicate rows, fix dates and amounts (no upload)</title>
+<link rel="canonical" href="https://gougousongsong.github.io/etsy-fee-calculator/csv-cleaner/">
+<meta name="description" content="Clean a messy CSV in your browser: trim cells, drop empty and duplicate rows, normalise dates and money. Your file never leaves your device, and anything ambiguous is flagged instead of guessed.">
+<meta property="og:title" content="Free CSV Cleaner — no upload, nothing guessed">
+<meta property="og:description" content="Trim, de-duplicate and normalise a CSV entirely in your browser. Ambiguous dates and amounts are flagged, never silently changed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://gougousongsong.github.io/etsy-fee-calculator/csv-cleaner/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Free CSV Cleaner",
+"applicationCategory":"BusinessApplication","operatingSystem":"Any (browser)",
+"url":"https://gougousongsong.github.io/etsy-fee-calculator/csv-cleaner/",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"featureList":["trim whitespace","drop empty rows","drop duplicate rows","normalise dates to ISO","normalise money values","flag ambiguous cells without guessing","runs offline in the browser"]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is my file uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The cleaning runs in your browser with JavaScript. Nothing is sent to a server, and you can verify that by opening your browser's network tab."}},
+{"@type":"Question","name":"What happens to rows the tool cannot understand?","acceptedAnswer":{"@type":"Answer","text":"They are kept exactly as you typed them and listed as flagged. The tool never guesses a date order or a decimal separator, because a wrong guess silently changes your money."}},
+{"@type":"Question","name":"Can it handle a 100,000 row file?","acceptedAnswer":{"@type":"Answer","text":"Yes, up to your browser's memory. Files are processed as text in the page, so a few hundred thousand rows are fine on a normal laptop."}}]}
+</script>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b35;--txt:#e8ecf1;--dim:#9aa4b2;--acc:#2fa8a0;--ok:#43b581;--warn:#d8a13a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding:32px 20px 72px}
+h1{font-size:30px;line-height:1.25;margin:0 0 8px}
+h2{font-size:19px;margin:34px 0 10px}
+p.lede{color:var(--dim);margin:0 0 22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:18px 0}
+label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px}
+textarea{width:100%;min-height:130px;padding:12px;border-radius:9px;border:1px solid var(--line);background:#0f1319;color:var(--txt);font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+input[type=file]{width:100%;padding:10px;border:1px dashed var(--line);border-radius:9px;background:#0f1319;color:var(--dim);font-size:13px}
+button{cursor:pointer;font:600 14px/1 inherit;padding:11px 16px;border-radius:9px;border:1px solid var(--line);background:#1d222b;color:var(--txt);margin:10px 8px 0 0}
+button.primary{background:var(--acc);border-color:var(--acc);color:#06231f}
+button:disabled{opacity:.5;cursor:default}
+.opts{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 4px;font-size:14px;color:var(--dim)}
+.opts label{display:flex;align-items:center;gap:8px;margin:0;color:var(--dim);font-size:14px}
+.note{font-size:12.5px;color:var(--dim);margin:10px 0 0}
+.stat{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+.pill{background:#12161d;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--dim)}
+.pill b{color:var(--txt)}
+.pill.good b{color:var(--ok)}
+.pill.warn b{color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:12px}
+td.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.scroll{overflow:auto;max-height:320px}
+a{color:var(--acc)}
+.cta{border-color:var(--acc);background:#10201f}
+.cta h2{margin-top:0}
+footer{margin-top:40px;font-size:13px;color:var(--dim)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p><a href="../">← free calculators</a></p>
+  <h1>Free CSV cleaner</h1>
+  <p class="lede">Trim every cell, drop empty and duplicate rows, and put dates and money into one shape.
+  It runs in this page — <b>your file never leaves your device</b>, and cells the cleaner cannot be sure
+  about are <b>flagged instead of guessed</b>.</p>
+
+  <div class="card">
+    <label for="file">Open a .csv file (or paste below)</label>
+    <input type="file" id="file" accept=".csv,.txt,text/csv">
+    <div style="height:14px"></div>
+    <label for="paste">…or paste rows</label>
+    <textarea id="paste" placeholder="order id,customer,amount,order_date
+1,Alice,&quot;$1,200.00&quot;,04/03/2026
+2,Bob,45.00,2026-03-05"></textarea>
+
+    <div class="opts">
+      <label><input type="checkbox" id="optDedupe" checked> drop duplicate rows</label>
+      <label><input type="checkbox" id="optNumbers" checked> normalise money</label>
+      <label><input type="checkbox" id="optDates" checked> normalise dates</label>
+    </div>
+
+    <button class="primary" id="run">Clean it</button>
+    <button id="sample">Try a messy sample</button>
+    <p class="note">Nothing is uploaded. Open your browser's Network tab and watch: no request is made.</p>
+  </div>
+
+  <section id="out" hidden>
+    <h2>Result</h2>
+    <div class="stat" id="stats"></div>
+    <button class="primary" id="download">Download cleaned .csv</button>
+    <button id="copy">Copy to clipboard</button>
+
+    <div id="flagBox" hidden>
+      <h2>Needs a human eye</h2>
+      <p class="note">These cells were left exactly as typed. A guess here would silently change a date or an amount.</p>
+      <div class="scroll"><table id="flagTable"><thead><tr><th>line</th><th>column</th><th>value</th><th>why</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <h2>Preview</h2>
+    <div class="scroll"><table id="preview"><thead></thead><tbody></tbody></table></div>
+    <p class="note" id="previewNote"></p>
+
+    <div class="card cta">
+      <h2>Too messy to fix by hand?</h2>
+      <p>I clean messy sheets for a living: duplicates, mixed date formats, amounts that lost their decimals,
+      broken exports. You send the file, you get it back clean plus a page listing every change and every
+      row I could not decide on my own — <b>$49, one file, 24 hours</b>.</p>
+      <p><a href="https://2477537799006.gumroad.com/l/nivrim">Send me the file →</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <p>The same rules power the paid service: a fixed rule set, an audit page, and rows left alone when they are ambiguous.
+    <a href="https://github.com/gougousongsong/csv-cleanup-proof">See the proof run on a real 514-row sheet</a>.</p>
+  </footer>
+</main>
+
+<script src="./cleaner.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
