@@ -1,87 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/amazon/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/amazon/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/cleaning/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/cleaning/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/etsy-digital-download-fees/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/etsy-digital-download-fees/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/etsy-fee-on-100-dollar-sale/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/etsy-fee-on-100-dollar-sale/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/etsy-fee-on-15-dollar-sale/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/etsy-fee-on-15-dollar-sale/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/etsy-fee-on-20-dollar-sale/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/etsy-fee-on-20-dollar-sale/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/etsy-fee-on-25-dollar-sale/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/etsy-fee-on-25-dollar-sale/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/etsy-fee-on-50-dollar-sale/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/etsy-fee-on-50-dollar-sale/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/etsy-fee-on-75-dollar-sale/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/etsy-fee-on-75-dollar-sale/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/etsy-fees-2026/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/etsy-fees-2026/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/etsy-offsite-ads-worth-it/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/etsy-offsite-ads-worth-it/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/freelance/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/freelance/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/</loc>
+    <loc>https://tools.gougousongsong.dpdns.org/</loc>
     <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
-  <url>
-    <loc>https://gougousongsong.github.io/etsy-fee-calculator/csv-cleaner/</loc>
-    <lastmod>2026-11-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
+  <url><loc>https://tools.gougousongsong.dpdns.org/work/</loc><lastmod>2026-11-27</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tools.gougousongsong.dpdns.org/work/ai-agent-directories/</loc><lastmod>2026-11-27</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>
