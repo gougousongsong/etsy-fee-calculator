@@ -19,9 +19,9 @@
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"Is my file uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The cleaning runs in your browser with JavaScript. Nothing is sent to a server, and you can verify that by opening your browser's network tab."}},
+{"@type":"Question","name":"Is my file uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The cleaning runs in your browser with JavaScript, so no cell of your file is ever transmitted. The page does count an anonymous visit and Cloudflare adds its own edge analytics; neither receives the file."}},
 {"@type":"Question","name":"What happens to rows the tool cannot understand?","acceptedAnswer":{"@type":"Answer","text":"They are kept exactly as you typed them and listed as flagged. The tool never guesses a date order or a decimal separator, because a wrong guess silently changes your money."}},
-{"@type":"Question","name":"Can it handle a 100,000 row file?","acceptedAnswer":{"@type":"Answer","text":"Yes, up to your browser's memory. Files are processed as text in the page, so a few hundred thousand rows are fine on a normal laptop."}}]}
+{"@type":"Question","name":"Will this fix a Shopify or Etsy import that keeps failing?","acceptedAnswer":{"@type":"Answer","text":"Usually the cause is one of six shapes: column count drift from a stray comma or unquoted quote, a price that is not a plain number, an ambiguous date such as 04/03/2026, a hidden byte-order mark, duplicate rows, or trailing spaces in header names. Clean the file here and re-upload the downloaded copy. If it still fails, the importer is rejecting something the CSV text cannot show, which is what the paid cleanup covers."}},{"@type":"Question","name":"Can it handle a 100,000 row file?","acceptedAnswer":{"@type":"Answer","text":"Yes, up to your browser's memory. Files are processed as text in the page, so a few hundred thousand rows are fine on a normal laptop."}}]}
 </script>
 <style>
 :root{--bg:#0f1115;--card:#171a21;--line:#262b35;--txt:#e8ecf1;--dim:#9aa4b2;--acc:#2fa8a0;--ok:#43b581;--warn:#d8a13a}
@@ -82,7 +82,7 @@ footer{margin-top:40px;font-size:13px;color:var(--dim)}
 
     <button class="primary" id="run">Clean it</button>
     <button id="sample">Try a messy sample</button>
-    <p class="note">Nothing is uploaded. Open your browser's Network tab and watch: no request is made.</p>
+    <p class="note">Nothing from your file is ever sent anywhere — the cleaning is JavaScript in this tab. The only requests this page makes are for the page itself and an anonymous page-view count; neither carries a single cell of your data. Open the Network tab and check.</p>
   </div>
 
   <section id="out" hidden>
@@ -110,8 +110,21 @@ footer{margin-top:40px;font-size:13px;color:var(--dim)}
     </div>
   </section>
 
+<h2>Why a CSV that looks fine still gets rejected</h2>
+<p>Almost every failed import is one of six shapes, and all six are visible in the raw text before you upload anything:</p>
+<ul>
+  <li><b>Column count drift.</b> A stray comma or an unquoted <code>"</code> inside a product name shifts every later cell one column to the right, so the price lands in the barcode column. Rows that do not parse to the same number of fields as the header are the first thing this page reports.</li>
+  <li><b>Money that is not a number.</b> <code>$1,200.00</code>, <code>1.200,00</code>, <code>12 99</code> and <code>45&nbsp;USD</code> all look like prices to a human and like garbage to an importer. The cleaner rewrites them to a plain decimal and flags every one it changed.</li>
+  <li><b>Two date systems in one file.</b> <code>04/03/2026</code> is April 3rd in the US and March 4th in most of Europe — the same cell, two different orders, and nothing in the file says which. Rather than pick one, this tool leaves the ambiguous cell as typed and lists it.</li>
+  <li><b>Invisible whitespace and line endings.</b> A trailing space after a header name (<code>Title&nbsp;</code>) makes the column "missing" to the importer, and mixed CRLF/LF breaks naive parsers. Headers and cells get trimmed.</li>
+  <li><b>Duplicate rows.</b> The same order or the same variant shipped twice in one export creates duplicate keys, which either overwrites silently or fails on a uniqueness check.</li>
+  <li><b>A byte-order mark at the start of the file.</b> Excel writes one, and it turns the first header into <code>Handle</code> with an invisible BOM in front, so the first column is not recognised at all.</li>
+</ul>
+<p>Worked on Shopify, Etsy, Amazon and WooCommerce exports — the checks are the same because the failures are the same. The tool changes nothing it cannot prove, which is why the flagged list exists.</p>
+
 <h2>Questions</h2>
 <p><b>Is my file uploaded anywhere?</b><br>No. The cleaning runs in your browser. Nothing is sent to a server.</p>
+<p><b>Will this fix a Shopify or Etsy import that keeps failing?</b><br>Usually the cause is one of the six shapes above — column drift, a price that is not a number, an ambiguous date, a hidden byte-order mark, duplicate rows or trailing spaces. Clean the file here, then re-upload the downloaded copy. If it still fails, the importer is complaining about something the CSV text cannot show (a required column your export never had, or a value that is valid but not allowed for your account), and that is exactly the case the $49 service covers: you send the file plus the error message, you get it back importable with the changes listed.</p>
 <p><b>Does it cost anything, or need an account?</b><br>Free, no signup, no email. The paid option is only for files you would rather hand over.</p>
 
   <footer>
