@@ -104,7 +104,7 @@ footer{margin-top:44px;font-size:13px;color:var(--dim);border-top:1px solid var(
   <p><strong>What is actually wrong:</strong> a UTF-8 byte-order mark. Three bytes, <span class="mono">EF BB BF</span>, at the very start of the file. Spreadsheets hide it; string comparison does not. Excel writes it by default when you save as "CSV UTF-8", and many libraries read it as part of the first field.</p>
   <p><strong>Prove it:</strong> in a text editor, put the cursor before the first letter of the first header and press Backspace once. If the header still looks identical but the import now works, that was it.</p>
   <pre>python3 -c "print(open('file.csv','rb').read(3))"   # b'\xef\xbb\xbf' means BOM</pre>
-  <p><strong>Fix:</strong> save as "CSV (comma delimited)", not "CSV UTF-8", or have the importer strip it. Stripping is safer — the BOM is the only thing that makes accented names survive Excel on Windows, so removing it at the front of the pipeline rather than at the source avoids a different bug later.</p>
+  <p><strong>Fix:</strong> save as "CSV (comma delimited)", not "CSV UTF-8", or have the importer strip it. Stripping is often the safer end — without the BOM, Excel on Windows falls back to the system code page and mangles accented names, so remove it at the front of the pipeline rather than at the source, and you avoid re-creating that bug later.</p>
 
   <h2 id="numbers">4. Amounts arrive as text, and totals refuse to add up</h2>
   <p><strong>What you see:</strong> a column of numbers left-aligned in the sheet, a green warning triangle, and <span class="mono">SUM</span> returning zero.</p>
