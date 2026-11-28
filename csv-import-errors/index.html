@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CSV import errors explained: the exact messages and what causes them</title>
+<link rel="canonical" href="https://gougousongsong.github.io/etsy-fee-calculator/csv-import-errors/">
+<meta name="description" content="Row 43 has 12 fields but the header has 9, everything lands in one column, ï»¿ appears before the first header, dates swap day and month, duplicated rows. What each CSV import error actually means and how to prove it in a text editor.">
+<meta property="og:title" content="CSV import errors explained: exact messages, real causes">
+<meta property="og:description" content="Ten CSV import failures decoded, with a 30-second check for each one. No guessing.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://gougousongsong.github.io/etsy-fee-calculator/csv-import-errors/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle",
+"headline":"CSV import errors explained: the exact messages and what causes them",
+"about":["CSV","data import","spreadsheet"],
+"url":"https://gougousongsong.github.io/etsy-fee-calculator/csv-import-errors/",
+"description":"What each common CSV import error message means, how to confirm the cause in a text editor, and what actually fixes it."}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why does my CSV open in Excel as a single column?","acceptedAnswer":{"@type":"Answer","text":"Because the separator in the file is not the one Excel expects for that locale. A file exported in a country where decimals are written 1,50 is usually separated by semicolons, and Excel on a US machine looks for commas. It can also be a tab-separated file that was renamed to .csv. Open the file in a plain text editor and look at the first line: if there are no commas in it, Excel is right that there is only one column."}},
+{"@type":"Question","name":"What does “row 43 has 12 fields but the header has 9” mean?","acceptedAnswer":{"@type":"Answer","text":"The importer splits each line on commas and counts the results. Row 43 produced more fields than the header, which almost always means a comma inside a value that was not wrapped in double quotes, or an opening quote that was never closed. Once a quote is unbalanced, every comma after it is treated as text, and the row boundary itself is lost."}},
+{"@type":"Question","name":"Why is there an odd character before the first header name?","acceptedAnswer":{"@type":"Answer","text":"That is a UTF-8 byte-order mark, the three bytes EF BB BF, which some editors show as the characters ï»¿. It is invisible in the spreadsheet but becomes part of the first header name, so a lookup for sku fails while a lookup for the same word preceded by the BOM succeeds."}},
+{"@type":"Question","name":"Why do dates come back swapped or rejected?","acceptedAnswer":{"@type":"Answer","text":"A value like 04/03/2026 is a different date in the US and in most of Europe, and no importer can see which was meant. Files also carry Excel serial numbers such as 45291 instead of a date at all. The only reliable fix is to export dates as ISO 8601, year first: 2026-03-04."}}]}
+</script>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b35;--txt:#e8ecf1;--dim:#9aa4b2;--acc:#2fa8a0;--ok:#43b581;--warn:#d8a13a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:32px 20px 72px}
+h1{font-size:30px;line-height:1.25;margin:0 0 8px}
+h2{font-size:20px;margin:38px 0 6px}
+h3{font-size:15px;margin:18px 0 4px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+p.lede{color:var(--dim);margin:0 0 22px;font-size:17px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:16px 0}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;background:#12161d;border:1px solid var(--line);border-radius:7px;padding:2px 6px;color:#cfe8e5}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:#12161d;border:1px solid var(--line);border-radius:9px;padding:12px;overflow:auto;margin:10px 0;color:#cfe8e5}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
+th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:12.5px}
+a{color:var(--acc)}
+ul,ol{padding-left:22px}
+li{margin:5px 0}
+.cta{border-color:var(--acc);background:#10201f}
+.cta h2{margin-top:0}
+.idx{columns:2;column-gap:28px;font-size:14.5px}
+.idx a{display:block;padding:3px 0;text-decoration:none;border-bottom:1px dashed #232833}
+footer{margin-top:44px;font-size:13px;color:var(--dim);border-top:1px solid var(--line);padding-top:16px}
+.tag{display:inline-block;font-size:11.5px;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:2px 9px;margin:0 6px 6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CSV import errors explained: the exact messages and what causes them</h1>
+  <p class="lede">Every importer fails in a small number of ways, and it usually tells you which one in a sentence nobody explains. These are the ten failures that account for almost all of it: the literal message or symptom, what is really in the file, a thirty-second way to prove it, and what fixes it.</p>
+
+  <div class="card">
+    <h3>On this page</h3>
+    <div class="idx">
+      <a href="#fields">Row 43 has 12 fields, the header has 9</a>
+      <a href="#onecolumn">Everything lands in one column</a>
+      <a href="#bom">An invisible character before the first header</a>
+      <a href="#numbers">Amounts arrive as text</a>
+      <a href="#dates">Dates swap day and month, or are rejected</a>
+      <a href="#dupes">Row count doubled, or duplicates appear</a>
+      <a href="#header">Column sku not found</a>
+      <a href="#encoding">Codec can't decode byte 0x92</a>
+      <a href="#empty">Blank rows at the end of the file</a>
+      <a href="#size">Import times out or silently truncates</a>
+    </div>
+  </div>
+
+  <p>One thing worth saying before the list: a CSV has no types, no schema and no escaping rules beyond "wrap it in double quotes". Everything below is a consequence of that. The file is almost never corrupt — it is doing exactly what the text says, and the importer is reading it the way the specification says to.</p>
+
+  <h2 id="fields">1. "Row 43 has 12 fields but the header has 9"</h2>
+  <p><strong>What you see:</strong> the importer refuses the whole file, naming one row number, or it imports and every column after a certain point is shifted by one to the right.</p>
+  <p><strong>What is actually wrong:</strong> the row contains a comma that the importer counted as a separator. Three things cause it:</p>
+  <ul>
+    <li>a value like <span class="mono">Smith, John</span> or <span class="mono">Blue, large</span> that was never wrapped in double quotes;</li>
+    <li>a quote that opened and never closed, which makes every comma after it part of the text — and usually eats the row break too;</li>
+    <li>a trailing comma at the end of the line, which adds one empty field to that row only.</li>
+  </ul>
+  <p><strong>Prove it in 30 seconds:</strong> open the file in a plain text editor (Notepad, TextEdit, VS Code — not Excel, which hides this), go to the row number the importer named, and count the commas outside quotes. If the count differs from the header line, you have found it.</p>
+  <p><strong>Fix:</strong> wrap the offending value in double quotes, and double any quote that appears inside it: <span class="mono">"Smith, John"</span> and <span class="mono">"12"" screen"</span>. Never "fix" it by deleting the comma — that changes the data. If it is one row out of thousands, the cleaning tool can find and quote it for you: <a href="/csv-cleaner/">clean the CSV in the browser first</a> and re-upload the downloaded copy.</p>
+
+  <h2 id="onecolumn">2. Everything lands in one column, commas and all</h2>
+  <p><strong>What you see:</strong> the import succeeds, but each row has a single cell containing the entire line.</p>
+  <p><strong>What is actually wrong:</strong> the file is not comma-separated. Either it uses semicolons (normal in countries where the decimal separator is a comma, because otherwise <span class="mono">1,50</span> would break the row), or it uses tabs and was saved with a .csv extension.</p>
+  <p><strong>Prove it:</strong> look at the first line in a text editor. No commas in it means the importer is right and the file is the problem.</p>
+  <table>
+    <thead><tr><th>First line looks like</th><th>Separator</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">sku,name,price</td><td>comma</td><td>nothing — the real failure is elsewhere</td></tr>
+      <tr><td class="mono">sku;name;price</td><td>semicolon</td><td>convert to commas, and only then convert <span class="mono">1,50</span> to <span class="mono">1.50</span></td></tr>
+      <tr><td class="mono">sku&#9;name&#9;price</td><td>tab</td><td>rename to .tsv, or convert tabs to commas</td></tr>
+      <tr><td class="mono">sku|name|price</td><td>pipe</td><td>convert — some ERPs export this</td></tr>
+    </tbody>
+  </table>
+  <p>Do the separator conversion <em>before</em> the decimal conversion, and do not do them in the same pass: converting semicolons first turns <span class="mono">1,50</span> into two fields, which is exactly failure number 1.</p>
+
+  <h2 id="bom">3. An invisible character sits before the first header name</h2>
+  <p><strong>What you see:</strong> the header cell reads fine, but the importer says the column <span class="mono">sku</span> does not exist. Sometimes the first header shows as <span class="mono">ï»¿sku</span>, <span class="mono">﻿sku</span> or an empty box.</p>
+  <p><strong>What is actually wrong:</strong> a UTF-8 byte-order mark. Three bytes, <span class="mono">EF BB BF</span>, at the very start of the file. Spreadsheets hide it; string comparison does not. Excel writes it by default when you save as "CSV UTF-8", and many libraries read it as part of the first field.</p>
+  <p><strong>Prove it:</strong> in a text editor, put the cursor before the first letter of the first header and press Backspace once. If the header still looks identical but the import now works, that was it.</p>
+  <pre>python3 -c "print(open('file.csv','rb').read(3))"   # b'\xef\xbb\xbf' means BOM</pre>
+  <p><strong>Fix:</strong> save as "CSV (comma delimited)", not "CSV UTF-8", or have the importer strip it. Stripping is safer — the BOM is the only thing that makes accented names survive Excel on Windows, so removing it at the front of the pipeline rather than at the source avoids a different bug later.</p>
+
+  <h2 id="numbers">4. Amounts arrive as text, and totals refuse to add up</h2>
+  <p><strong>What you see:</strong> a column of numbers left-aligned in the sheet, a green warning triangle, and <span class="mono">SUM</span> returning zero.</p>
+  <p><strong>What is actually wrong:</strong> the cell is text that looks like a number. The usual culprits, in order of how often they occur:</p>
+  <ul>
+    <li>a currency symbol or code in the same cell: <span class="mono">$12.00</span>, <span class="mono">12.00 USD</span>;</li>
+    <li>a thousands separator: <span class="mono">1,234.56</span> — and in European files <span class="mono">1.234,56</span>, where both the roles are reversed;</li>
+    <li>a non-breaking space, which looks exactly like a normal space and is not;</li>
+    <li>a trailing minus sign, as in <span class="mono">123.45-</span>, which some accounting systems export;</li>
+    <li>a leading apostrophe, which forces text in Excel and is invisible in the cell.</li>
+  </ul>
+  <p><strong>Prove it:</strong> select the column and look at the status bar. If it shows Count but not Sum, the values are text.</p>
+  <p><strong>Fix:</strong> reduce every amount to digits, one decimal point and an optional leading minus, then convert. The order matters: <span class="mono">1,234.56</span> and <span class="mono">1.234,56</span> must be told apart by looking at the last separator in the string, not by assuming.</p>
+
+  <h2 id="dates">5. Dates swap day and month, or are rejected with "invalid date"</h2>
+  <p><strong>What you see:</strong> an order from 3 April becomes 4 March, or the importer rejects the column entirely.</p>
+  <p><strong>What is actually wrong:</strong> <span class="mono">04/03/2026</span> is two different dates depending on who wrote the file, and the file does not say which. Related failures: Excel serial numbers (<span class="mono">45291</span>), timestamps with a timezone offset, and month names in a non-English locale.</p>
+  <p><strong>The uncomfortable part:</strong> any tool that "just fixes" an ambiguous date is guessing. If 30% of your rows have a day above 12, you can infer the convention from those rows — but if all of them are below 13, there is no evidence in the file at all, and the only correct output is a flag, not a value.</p>
+  <p><strong>Fix:</strong> export dates as ISO 8601 — <span class="mono">2026-03-04</span> — end of debate. If you cannot change the export, sort the file and check whether any day exceeds 12; that single fact decides the convention for the whole column.</p>
+
+  <h2 id="dupes">6. The row count doubles, or duplicates appear out of nowhere</h2>
+  <p><strong>What you see:</strong> 1,000 rows in the file, 1,000 rows in the table before, 2,000 after.</p>
+  <p><strong>What is actually wrong:</strong> one of three things:</p>
+  <ul>
+    <li>the import appends instead of replacing, and the file contained the rows that were already there — the most common cause by far;</li>
+    <li>a line break inside a quoted value (a multi-line address, for example) is being treated as a row break by a reader that does not handle quoted newlines;</li>
+    <li>a trailing empty line at the end of the file is imported as a blank record, which then looks like a duplicate of "nothing".</li>
+  </ul>
+  <p><strong>Prove it:</strong> if the duplicates are <em>every</em> row, it is the append/replace setting. If only some rows appear twice, sort by a column and look at the neighbours of the doubled rows — a wrapped address will be there.</p>
+  <p><strong>Fix:</strong> delete the destination rows before importing, and de-duplicate on a real key (order id, SKU) rather than on the whole row: two orders can legitimately be identical in every column except the id.</p>
+
+  <h2 id="header">7. "Column sku not found" — but the column is right there</h2>
+  <p><strong>What you see:</strong> the mapping screen cannot match a header you can plainly see in the file.</p>
+  <p><strong>What is actually wrong:</strong> the header string is not the string you think it is. In practice: a trailing space after the last header, a non-breaking space inside it, a BOM (number 3), different capitalisation, or a smart quote pasted from a document. Headers copied out of a PDF are the worst offenders.</p>
+  <p><strong>Prove it:</strong> in a text editor, move to the end of the header line and press End. If the cursor stops one character short of the line break, there is a space there.</p>
+  <p><strong>Fix:</strong> trim the header line, and keep a copy of the trimmed headers next to the file so the next import is not a new investigation.</p>
+
+  <h2 id="encoding">8. "Codec can't decode byte 0x92" (or any other 0x8x / 0x9x byte)</h2>
+  <p><strong>What you see:</strong> a Python, Ruby or Node script dies on the first line, naming a byte position.</p>
+  <p><strong>What is actually wrong:</strong> the file is Windows-1252, not UTF-8. Byte <span class="mono">0x92</span> is the curly apostrophe in <span class="mono">Smith’s</span>; in UTF-8 that character is three bytes. Excel on Windows writes this encoding by default when you choose plain "CSV".</p>
+  <p><strong>Fix:</strong> read with <span class="mono">encoding="cp1252"</span> and write back as UTF-8 — but check first that the file really is cp1252 everywhere and not a mixture, which happens when two people export into the same file.</p>
+  <pre>python3 -c "d=open('file.csv','rb').read(); d.decode('utf-8'); print('utf-8 ok')"</pre>
+
+  <h2 id="empty">9. Blank rows at the end, or in the middle</h2>
+  <p><strong>What you see:</strong> an extra empty record, a count that is one higher than expected, or an error about a row that looks empty in the spreadsheet.</p>
+  <p><strong>What is actually wrong:</strong> every CSV file ends with a line break, and a reader that splits on line breaks produces an empty final element. If the file was edited by a spreadsheet after export, deleted rows also leave lines containing only separators — <span class="mono">,,,</span> — which are not empty strings and pass a naive "is it blank" test.</p>
+  <p><strong>Fix:</strong> drop rows where every field is empty after trimming. That handles both shapes, and it is the one cleanup that is always safe.</p>
+
+  <h2 id="size">10. The import times out, or stops at exactly 1,000 / 10,000 rows</h2>
+  <p><strong>What you see:</strong> a generic error, or a successful import with fewer rows than the file contains.</p>
+  <p><strong>What is actually wrong:</strong> a request size or time limit, not a data problem. The "exactly 1,000" pattern means a default page or batch size is being applied somewhere between the file and the table.</p>
+  <p><strong>Fix:</strong> split the file into batches on a column you can sort by, import in order, and count the rows after each batch. If the count matches the file, the importer is fine and the failure was size. Do this before spending an hour hunting for a corrupt row that does not exist.</p>
+
+  <div class="card cta">
+    <h2>Clean the file first, then import</h2>
+    <p style="margin-top:0">The <a href="/csv-cleaner/">free CSV cleaner</a> runs entirely in your browser: it trims cells, drops empty and duplicate rows, converts dates to ISO and amounts to plain numbers, and — importantly — lists every cell it could not decide instead of guessing. Nothing is uploaded; you download the cleaned file and import that.</p>
+    <p style="margin-bottom:0">If the import still fails after that, the problem is not in the text you can see, and that is the case the <a href="https://2477537799006.gumroad.com/l/nivrim">done-for-you cleanup</a> exists for: one file, an audit log of every change, forty-nine dollars.</p>
+  </div>
+
+  <h2>How to tell which one you have, in one pass</h2>
+  <ol>
+    <li>Open the file in a text editor, not a spreadsheet. Look at the first line: does it contain commas?</li>
+    <li>Count the commas on the header line, then on the row the importer complained about.</li>
+    <li>Put the cursor before the first character of the header and press Backspace once.</li>
+    <li>Move to the end of the header line: does End stop short of the line break?</li>
+    <li>If the errors concern dates or amounts, look for the ambiguous shapes above rather than for corruption.</li>
+  </ol>
+  <p>That is five minutes, and it identifies the cause in nearly every case. The remaining ones are usually a value that looks right in the sheet and is not right in the file — which is exactly what a browser-side cleaner with a flag list is for.</p>
+
+  <footer>
+    <p>Written by the maker of the free CSV cleaner. The tool never uploads your file; it runs in the page and lists ambiguous cells instead of guessing. Related: <a href="/csv-cleaner/">the cleaner</a>, <a href="/etsy-fees-2026/">Etsy fee arithmetic for 2026</a>.</p>
+  </footer>
+</div>
+</body>
+</html>
